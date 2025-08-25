@@ -3,7 +3,7 @@
  * Plugin Name:       BCDL Invoice
  * Plugin URI:        https://github.com/bchavdarov/bcdl-invoice
  * Description:       A small WordPress plugin that will create your invoices as 'pdf' files. Shortcode [bcdlinvoice].
- * Version:           3.1.0
+ * Version:           3.2.0
  * Requires at least: 5.3
  * Requires PHP:      7.3
  * Author:            Boncho Chavdarov / DATTEQ Ltd.
@@ -20,6 +20,8 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+require_once __DIR__ . '/bcdl-invfunctions.php';
+
 function bcdl_invoice() {
 
     $resulthtml = '<h2 class="text-center">';
@@ -31,11 +33,36 @@ function bcdl_invoice() {
     $resulthtml .= '" method="post" target="_blank">
         <!-- Customer -->
         <div class="input-group mb-3">
-          <span class="input-group-text" id="bcdlcustomerspan">Customer</span>
-          <input type="text" name="customer" id="bcdlcustomer" class="form-control" placeholder="Customer" aria-label="Customer" aria-describedby="bcdlcustomerspan">
-          
-          <span class="input-group-text" id="bcdlcrnspan">CRN</span>
-          <input type="text" name="companyregnumcust" id="bcdlcompanyregnumcust" class="form-control" placeholder="CRN" aria-label="Company Registration Number" aria-describedby="bcdlcrnspan">
+          <span class="input-group-text" id="bcdlcustidspan">';
+          $resulthtml .= __('Customer ID', 'bcdl-invoice');
+          $resulthtml .= '</span>
+          <input type="number" name="custid" id="bcdlcustid" class="form-control" placeholder="' . __('Customer ID', 'bcdl-invoice'). '" required aria-describedby="bcdlcustidspan">
+          <span class="input-group-text" id="bcdlcustomerspan">' . __('Customer Name', 'bcdl-invoice'). '</span>
+          <input type="text" name="customer" id="bcdlcustomer" class="form-control" placeholder="' . __('Customer Name', 'bcdl-invoice'). '" required aria-describedby="bcdlcustomerspan">
+        </div>
+
+        <div class="input-group mb-3">
+          <span class="input-group-text" id="bcdladdressspan">' . __('Customer Address', 'bcdl-invoice'). '</span>
+          <input type="text" name="address" id="bcdladdress" class="form-control" placeholder="' . __('Customer Address', 'bcdl-invoice'). '" required aria-describedby="bcdladdressspan">
+
+          <span class="input-group-text" id="bcdlcrnspan">' . __('CRN', 'bcdl-invoice'). '</span>
+          <input type="text" name="crn" id="bcdlcrn" class="form-control" placeholder="' . __('Company Registration Number', 'bcdl-invoice'). '" required aria-describedby="bcdlcrnspan">
+        </div>
+
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="bcdlvatspan">' . __('VAT', 'bcdl-invoice'). '</span>
+            <input type="text" name="vat" id="bcdlvat" class="form-control" placeholder="' . __('VAT Number', 'bcdl-invoice'). '" aria-describedby="bcdlvatspan">
+
+            <span class="input-group-text" id="bcdlmrpspan">' . __('MRP', 'bcdl-invoice'). '</span>
+            <input type="text" name="mrp" id="bcdlmrp" class="form-control" placeholder="' . __('Materially Responsible Person', 'bcdl-invoice'). '" aria-describedby="bcdlmrpspan">
+        </div>
+
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="bcdlemailspan">' . __('Email', 'bcdl-invoice'). '</span>
+            <input type="email" name="email" id="bcdlemail" class="form-control" placeholder="' . __('Email', 'bcdl-invoice'). '" aria-describedby="bcdlemailspan">
+
+            <span class="input-group-text" id="bcdlphonespan">' . __('Phone', 'bcdl-invoice'). '</span>
+            <input type="text" name="phone" id="bcdlphone" class="form-control" placeholder="' . __('Phone Number', 'bcdl-invoice'). '" aria-describedby="bcdlphonespan">
         </div>
         
         <!-- Services Table -->
@@ -43,12 +70,12 @@ function bcdl_invoice() {
           <thead class="table-light">
             <tr>
               <th>#</th>
-              <th>Description</th>
-              <th>Measure</th>
-              <th>Quantity</th>
-              <th>Unit Price</th>
-              <th>Total</th>
-              <th>Action</th>
+              <th>' . __('Description of the product or service', 'bcdl-invoice'). '</th>
+              <th>' . __('Measure', 'bcdl-invoice'). '</th>
+              <th>' . __('Quantity', 'bcdl-invoice'). '</th>
+              <th>' . __('Unit Price', 'bcdl-invoice'). '</th>
+              <th>' . __('Total', 'bcdl-invoice'). '</th>
+              <th>' . __('Action', 'bcdl-invoice'). '</th>
             </tr>
           </thead>
           <tbody>
@@ -56,22 +83,22 @@ function bcdl_invoice() {
               <td>1</td>
               <td><input type="text" name="description[]" class="form-control" required></td>
               <td><input type="text" name="measure[]" class="form-control" required></td>
-              <td><input type="number" name="quantity[]" class="form-control qty" value="1" required placeholder="Quantity" min="0" step="any"></td>
-              <td><input type="number" name="unit_price[]" class="form-control price" value="0" required placeholder="Unit Price" min="0" step="any"></td>
+              <td><input type="number" name="quantity[]" class="form-control qty" value="1" required placeholder="' . __('Quantity', 'bcdl-invoice'). '" min="0" step="any"></td>
+              <td><input type="number" name="unit_price[]" class="form-control price" value="0" required placeholder="' . __('Unit Price', 'bcdl-invoice'). '" min="0" step="any"></td>
               <td class="total">0.00</td>
-              <td><button type="button" class="btn btn-danger btn-sm removeRow">Remove</button></td>
+              <td><button type="button" class="btn btn-danger btn-sm removeRow">' . __('Remove', 'bcdl-invoice'). '</button></td>
             </tr>
           </tbody>
           <tfoot>
             <tr>
-              <td colspan="5" class="text-end fw-bold">Grand Total</td>
+              <td colspan="5" class="text-end fw-bold">' . __('Grand Total', 'bcdl-invoice'). '</td>
               <td id="grandTotal" class="fw-bold">0.00</td>
               <td></td>
             </tr>
           </tfoot>
         </table>
 
-        <button type="button" class="btn btn-primary btn-sm" id="addRow">Add Service</button>
+        <button type="button" class="btn btn-primary btn-sm" id="addRow">' . __('Add Service', 'bcdl-invoice'). '</button>
         <br><br>
         <input id="bcdlpdfsubmitchk" type="hidden" name="bcdlpdfsubmitted" value="0">
         <button type="submit" class="btn btn-success">';
@@ -122,7 +149,7 @@ function bcdl_invoice() {
               <td><input type="number" name="quantity[]" class="form-control qty" value="1" required placeholder="Quantity" min="0" step="any"></td>
               <td><input type="number" name="unit_price[]" class="form-control price" value="0" required placeholder="Unit Price" min="0" step="any"></td>
               <td class="total">0.00</td>
-              <td><button type="button" class="btn btn-danger btn-sm removeRow">Remove</button></td>
+              <td><button type="button" class="btn btn-danger btn-sm removeRow">' . __('Remove', 'bcdl-invoice'). '</button></td>
             `;
             tableBody.appendChild(newRow);
             attachEvents(newRow);

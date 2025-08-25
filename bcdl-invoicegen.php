@@ -1,7 +1,8 @@
 <?php
 // Exit if accessed directly
-if (!defined('ABSPATH')) {
-    exit;
+if ( $_SERVER['REQUEST_METHOD']=='GET' && realpath(__FILE__) == realpath( $_SERVER['SCRIPT_FILENAME'] ) ) {        
+    header( 'HTTP/1.0 403 Forbidden', TRUE, 403 );
+    die( header( 'location: /index.php' ) );
 }
 
 //Errors displaying for debug purposes only
@@ -14,12 +15,35 @@ require_once dirname(__FILE__, 4) . '/wp-load.php';
 // Initialize the variables
 require_once __DIR__ . '/bcdl-invclasses.php';
 
+$customer = new Party(
+    (int) $_POST['custid'],
+    stripslashes(sanitize_text_field($_POST['customer'])),
+    stripslashes(sanitize_textarea_field($_POST['address'])), // better for multi-line
+    stripslashes(sanitize_text_field($_POST['crn'])),
+    stripslashes(sanitize_text_field($_POST['vat'])),
+    stripslashes(sanitize_text_field($_POST['mrp'])),
+    sanitize_email($_POST['email']),
+    stripslashes(sanitize_text_field($_POST['phone']))
+);
+
 // Creating the code
 $invoicetitle = '<h1>';
 $invoicetitle .= __('Invoice', 'bcdl-invoice');
 $invoicetitle .= '</h1><p class="invoriginal">';
+
 $invoicesubtitle = __('Original', 'bcdl-invoice');
-$invoicebody = '</p><p class="mainpara">This is a <strong>sample</strong> text in English.</p>';
+
+$invoicebody = '<p><strong>Customer Details</strong></p>
+    <table class="mainpara" border="0">
+        <tr><th>ID</th><td>' . $customer->custid . '</td></tr>
+        <tr><th>Name</th><td>' . $customer->name . '</td></tr>
+        <tr><th>Address</th><td>' . nl2br($customer->address) . '</td></tr>
+        <tr><th>CRN</th><td>' . $customer->crn . '</td></tr>
+        <tr><th>VAT</th><td>' . $customer->vat . '</td></tr>
+        <tr><th>MRP</th><td>' . $customer->mrp . '</td></tr>
+        <tr><th>Email</th><td>' . $customer->email . '</td></tr>
+        <tr><th>Phone</th><td>' . $customer->phone . '</td></tr>
+    </table>';
 
 require_once __DIR__ . '/vendor/autoload.php';
 

@@ -7,6 +7,7 @@ if (!defined('ABSPATH')) {
 // the classes for the invoice
 
 class Party {
+    public int $custid;
     public string $name;
     public string $address;
     public string $crn; // Company Registration Number
@@ -16,6 +17,7 @@ class Party {
     public string $phone;
 
     public function __construct(
+        int $custid,
         string $name,
         string $address,
         string $crn,
@@ -24,6 +26,7 @@ class Party {
         string $email,
         string $phone
     ) {
+        $this->custid = $custid;
         $this->name = $name;
         $this->address = $address;
         $this->crn = $crn;
