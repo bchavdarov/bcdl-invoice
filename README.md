@@ -7,4 +7,12 @@ Make a translation by running this command form the plugin's directory:
 
 `wp i18n make-pot . languages/bcdl-invoice.pot` : It will make a .pot file in its `languages/` directory (requires [wp-cli](https://make.wordpress.org/cli/handbook/guides/installing/) installed).
 
+To install the plugin for development - clone the repository in your WordPress /plugins folder. 
+
+`cd bcdl-invoice`
+
+Install PHP dependencies using Composer:
+
+`composer install`
+
 Author's page: [https://datteq.com/](https://datteq.com/)
