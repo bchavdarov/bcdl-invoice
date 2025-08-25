@@ -15,4 +15,4 @@ Install PHP dependencies using Composer:
 
 `composer install`
 
-Author's page: [https://datteq.com/](https://datteq.com/)
+Author's site: [https://datteq.com/](https://datteq.com/)
