@@ -1,24 +1,13 @@
 <?php
-
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+//Errors displaying for debug purposes only
+//error_reporting(E_ALL);
+//ini_set('display_errors', 1);
 
 // Load WordPress so __() works
 require_once dirname(__FILE__, 4) . '/wp-load.php';
 
-class Party {
-    public $name;
-    public $address;
-    public $vat;
-    public $email;
-
-    public function __construct($name, $address, $vat, $email) {
-        $this->name = $name;
-        $this->address = $address;
-        $this->vat = $vat;
-        $this->email = $email;
-    }
-}
+// Initialize the variables
+require_once __DIR__ . '/bcdl-invclasses.php';
 
 // Creating the code
 $invoicetitle = '<h1>';
