@@ -15,6 +15,11 @@
  * Domain Path:       /languages
  */
 
+// Exit if accessed directly
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 function bcdl_invoice() {
 
     $resulthtml = '<h2 class="text-center">';

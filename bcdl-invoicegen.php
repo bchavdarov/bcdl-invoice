@@ -1,4 +1,9 @@
 <?php
+// Exit if accessed directly
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 //Errors displaying for debug purposes only
 //error_reporting(E_ALL);
 //ini_set('display_errors', 1);
