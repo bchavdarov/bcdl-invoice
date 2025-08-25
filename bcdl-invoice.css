@@ -1,0 +1,22 @@
+body {
+    font-family: DejaVu Sans, sans-serif;
+}
+
+.mainpara {
+    font-size: 9pt;
+    line-height: 1.5;
+}
+
+.invoriginal {
+  font-weight: bold;
+  font-size: 11pt;
+}
+
+.invfooter {
+  text-align: center;
+  font-style: italic;
+}
+
+.invfooterpara {
+  font-size: 7pt;
+}
