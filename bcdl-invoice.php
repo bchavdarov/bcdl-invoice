@@ -27,7 +27,7 @@ function bcdl_invoice() {
     $table_name = $wpdb->prefix . 'bcdl_invoice_companies';
 
     // Fetch all fields except the first company (ID = 1)
-    $companies = $wpdb->get_results("SELECT * FROM $table_name WHERE company_id > 1 ORDER BY company_id ASC");
+    $companies = $wpdb->get_results("SELECT * FROM $table_name WHERE company_id > 1 ORDER BY company_name ASC");
     $resulthtml = '<h2 class="text-center">';
     $resulthtml .= __('INVOICE Form', 'bcdl-invoice');
     $resulthtml .= '</h2>
