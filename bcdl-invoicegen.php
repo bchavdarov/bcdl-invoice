@@ -14,6 +14,7 @@ require_once dirname(__FILE__, 4) . '/wp-load.php';
 
 // Initialize the variables
 require_once __DIR__ . '/bcdl-invclasses.php';
+require_once __DIR__ . '/bcdl-invfunctions.php';
 
 $customer = new Party(
     (int) $_POST['custid'],
@@ -25,6 +26,8 @@ $customer = new Party(
     sanitize_email($_POST['email']),
     stripslashes(sanitize_text_field($_POST['phone']))
 );
+
+$customer = bcdl_company_save($customer);
 
 // Creating the code
 $invoicetitle = '<h1>';

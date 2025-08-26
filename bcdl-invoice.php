@@ -3,7 +3,7 @@
  * Plugin Name:       BCDL Invoice
  * Plugin URI:        https://github.com/bchavdarov/bcdl-invoice
  * Description:       A small WordPress plugin that will create your invoices as 'pdf' files. Shortcode [bcdlinvoice].
- * Version:           3.2.0
+ * Version:           3.2.2
  * Requires at least: 5.3
  * Requires PHP:      7.3
  * Author:            Boncho Chavdarov / DATTEQ Ltd.
@@ -23,11 +23,41 @@ if (!defined('ABSPATH')) {
 require_once __DIR__ . '/bcdl-invfunctions.php';
 
 function bcdl_invoice() {
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'bcdl_invoice_companies';
 
+    // Fetch all fields except the first company (ID = 1)
+    $companies = $wpdb->get_results("SELECT * FROM $table_name WHERE company_id > 1 ORDER BY company_id ASC");
     $resulthtml = '<h2 class="text-center">';
     $resulthtml .= __('INVOICE Form', 'bcdl-invoice');
     $resulthtml .= '</h2>
     <div class="container">
+
+        <form class="mb-3">
+          <select id="companyselector" class="form-select mb-3" aria-label="Default select example">
+            <option selected>'.__('Select company from the list', 'bcdl-invoice').'</option>';
+          if ($companies) {
+              foreach ($companies as $c) {
+                  $resulthtml .= '<option value="' . esc_attr($c->company_id) . '"'
+                      . ' data-name="' . esc_attr($c->company_name) . '"'
+                      . ' data-address="' . esc_attr($c->address) . '"'
+                      . ' data-crn="' . esc_attr($c->crn) . '"'
+                      . ' data-vat="' . esc_attr($c->vat) . '"'
+                      . ' data-mrp="' . esc_attr($c->mrp) . '"'
+                      . ' data-email="' . esc_attr($c->email) . '"'
+                      . ' data-phone="' . esc_attr($c->phone) . '"'
+                      . '>'
+                      . esc_html($c->company_name)
+                      . '</option>';
+              }
+          } else {
+              $resulthtml .= '<option value="">' . __('No customers found', 'bcdl-invoice') . '</option>';
+          }
+          
+    $resulthtml .= '</select>
+          <button id="loadCompanyBtn" type="submit" class="btn btn-primary">' . __('Select company', 'bcdl-invoice') . '</button>
+        </form>
+
       <form action="';
     $resulthtml .= plugin_dir_url(__FILE__) . 'bcdl-invoicegen.php';
     $resulthtml .= '" method="post" target="_blank">
@@ -36,7 +66,7 @@ function bcdl_invoice() {
           <span class="input-group-text" id="bcdlcustidspan">';
           $resulthtml .= __('Customer ID', 'bcdl-invoice');
           $resulthtml .= '</span>
-          <input type="number" name="custid" id="bcdlcustid" class="form-control" placeholder="' . __('Customer ID', 'bcdl-invoice'). '" required aria-describedby="bcdlcustidspan">
+          <input type="number" name="custid" id="bcdlcustid" class="form-control" placeholder="' . __('Customer ID', 'bcdl-invoice'). '" aria-describedby="bcdlcustidspan" readonly>
           <span class="input-group-text" id="bcdlcustomerspan">' . __('Customer Name', 'bcdl-invoice'). '</span>
           <input type="text" name="customer" id="bcdlcustomer" class="form-control" placeholder="' . __('Customer Name', 'bcdl-invoice'). '" required aria-describedby="bcdlcustomerspan">
         </div>
@@ -159,6 +189,29 @@ function bcdl_invoice() {
         updateGrandTotal(); // initial calculation
     });
     </script>';
+    $resulthtml .= '
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const selector = document.getElementById("companyselector");
+        const loadBtn = document.getElementById("loadCompanyBtn");
+
+        loadBtn.addEventListener("click", function(e) {
+            e.preventDefault();
+            const selected = selector.options[selector.selectedIndex];
+            if (!selected.value) return;
+
+            document.getElementById("bcdlcustid").value = selected.value;
+            document.getElementById("bcdlcustomer").value = selected.dataset.name || "";
+            document.getElementById("bcdladdress").value = selected.dataset.address || "";
+            document.getElementById("bcdlcrn").value = selected.dataset.crn || "";
+            document.getElementById("bcdlvat").value = selected.dataset.vat || "";
+            document.getElementById("bcdlmrp").value = selected.dataset.mrp || "";
+            document.getElementById("bcdlemail").value = selected.dataset.email || "";
+            document.getElementById("bcdlphone").value = selected.dataset.phone || "";
+        });
+    });
+    </script>';
+
 
     return $resulthtml;
 }

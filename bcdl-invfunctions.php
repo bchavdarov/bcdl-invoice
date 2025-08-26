@@ -95,3 +95,52 @@ function bcdl_invoice_settings_page() {
     </div>
     <?php
 }
+
+// Save the new company to the database
+function bcdl_company_save($customer) {
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'bcdl_invoice_companies';
+
+    // Don't allow saving ID=1 (our own company)
+    if ($customer->custid === 1) {
+        return $customer;
+    }
+
+    // 1. Check if this customer ID exists
+    $exists = null;
+    if ($customer->custid > 1) {
+        $exists = $wpdb->get_var($wpdb->prepare(
+            "SELECT company_id FROM $table_name WHERE company_id = %d",
+            $customer->custid
+        ));
+    }
+
+    // 2. If no ID match, check by CRN or VAT (unique identifiers)
+    if (!$exists && (!empty($customer->crn) || !empty($customer->vat))) {
+        $exists = $wpdb->get_var($wpdb->prepare(
+            "SELECT company_id FROM $table_name WHERE crn = %s OR vat = %s",
+            $customer->crn,
+            $customer->vat
+        ));
+    }
+
+    // 3. If still not found, insert as new company
+    if (!$exists) {
+        $wpdb->insert($table_name, [
+            'company_name' => $customer->name,
+            'address'      => $customer->address,
+            'crn'          => $customer->crn,
+            'vat'          => $customer->vat,
+            'mrp'          => $customer->mrp,
+            'email'        => $customer->email,
+            'phone'        => $customer->phone
+        ]);
+
+        $customer->custid = $wpdb->insert_id;
+    } else {
+        // If found, update $customer->custid to the existing one
+        $customer->custid = (int) $exists;
+    }
+
+    return $customer;
+}
