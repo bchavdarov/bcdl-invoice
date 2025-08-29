@@ -1,38 +1,22 @@
 <?php
+/**
+ * BCDL Invoice Classes Loader
+ */
+
+namespace BCDL\Invoice;
+
 // Exit if accessed directly
 if (!defined('ABSPATH')) {
     exit;
 }
 
-// the classes for the invoice
-
-class Party {
-    public int $custid;
-    public string $name;
-    public string $address;
-    public string $crn; // Company Registration Number
-    public string $vat; // Company Vat Number
-    public string $mrp; // Materially Responsible Person
-    public string $email;
-    public string $phone;
-
-    public function __construct(
-        int $custid,
-        string $name,
-        string $address,
-        string $crn,
-        string $vat,
-        string $mrp,
-        string $email,
-        string $phone
-    ) {
-        $this->custid = $custid;
-        $this->name = $name;
-        $this->address = $address;
-        $this->crn = $crn;
-        $this->vat = $vat;
-        $this->mrp = $mrp;
-        $this->email = $email;
-        $this->phone = $phone;
+// Autoload classes from /classes
+spl_autoload_register(function ($class) {
+    if (strpos($class, __NAMESPACE__) === 0) {
+        $relative = str_replace(__NAMESPACE__ . '\\', '', $class);
+        $file = __DIR__ . '/classes/' . $relative . '.php';
+        if (file_exists($file)) {
+            require_once $file;
+        }
     }
-}
+});

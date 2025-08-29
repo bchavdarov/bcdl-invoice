@@ -11,11 +11,11 @@ function bcdl_invoice_add_settings_menu() {
     add_menu_page(
         __('BCDL Invoice Settings', 'bcdl-invoice'),          // Page title
         __('BCDL Invoice Settings', 'bcdl-invoice'),          // Menu title
-        'manage_options',            // Capability
-        'bcdl-invoice-settings',     // Menu slug
-        'bcdl_invoice_settings_page',// Callback function
-        'dashicons-media-spreadsheet', // Icon
-        26                           // Position
+        'manage_options',               // Capability
+        'bcdl-invoice-settings',        // Menu slug
+        'bcdl_invoice_settings_page',   // Callback function
+        'dashicons-media-spreadsheet',  // Icon
+        26                              // Position
     );
 }
 
@@ -35,6 +35,7 @@ function bcdl_invoice_settings_page() {
         mrp VARCHAR(100) DEFAULT '',
         email VARCHAR(100) DEFAULT '',
         phone VARCHAR(50) DEFAULT '',
+        iban VARCHAR(50) DEFAULT '',
         PRIMARY KEY (company_id)
     ) $charset_collate;";
     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
@@ -52,7 +53,8 @@ function bcdl_invoice_settings_page() {
             'vat'          => stripslashes(sanitize_text_field($_POST['vat'])),
             'mrp'          => stripslashes(sanitize_text_field($_POST['mrp'])),
             'email'        => sanitize_email($_POST['email']),
-            'phone'        => stripslashes(sanitize_text_field($_POST['phone']))
+            'phone'        => stripslashes(sanitize_text_field($_POST['phone'])),
+            'iban'         => stripslashes(sanitize_text_field($_POST['iban']))
         ];
 
         if ($company) {
@@ -89,6 +91,8 @@ function bcdl_invoice_settings_page() {
                     <td><input type="email" name="email" value="<?php echo esc_attr($company->email ?? ''); ?>" class="regular-text"></td></tr>
                 <tr><th><?php _e('Phone', 'bcdl-invoice') ?></th>
                     <td><input type="text" name="phone" value="<?php echo esc_attr($company->phone ?? ''); ?>" class="regular-text"></td></tr>
+                <tr><th>IBAN</th>
+                    <td><input type="text" name="iban" value="<?php echo esc_attr($company->iban ?? ''); ?>" class="regular-text"></td></tr>
             </table>
             <p><input type="submit" name="bcdl_save_company" class="button button-primary" value="<?php _e('Save Company Data', 'bcdl-invoice') ?>"></p>
         </form>
@@ -102,16 +106,16 @@ function bcdl_company_save($customer) {
     $table_name = $wpdb->prefix . 'bcdl_invoice_companies';
 
     // Don't allow saving ID=1 (our own company)
-    if ($customer->custid === 1) {
+    if ($customer->id === 1) {
         return $customer;
     }
 
     // 1. Check if this customer ID exists
     $exists = null;
-    if ($customer->custid > 1) {
+    if ($customer->id > 1) {
         $exists = $wpdb->get_var($wpdb->prepare(
             "SELECT company_id FROM $table_name WHERE company_id = %d",
-            $customer->custid
+            $customer->id
         ));
     }
 
@@ -133,14 +137,42 @@ function bcdl_company_save($customer) {
             'vat'          => $customer->vat,
             'mrp'          => $customer->mrp,
             'email'        => $customer->email,
-            'phone'        => $customer->phone
+            'phone'        => $customer->phone,
+            'iban'        => $customer->iban
         ]);
 
-        $customer->custid = $wpdb->insert_id;
+        $customer->id = $wpdb->insert_id;
     } else {
-        // If found, update $customer->custid to the existing one
-        $customer->custid = (int) $exists;
+        // If found, update $customer->id to the existing one
+        $customer->id = (int) $exists;
     }
 
     return $customer;
 }
+
+function bcdl_footer_html() {
+    $footerHTML = '<div class="invfooter"><p class="mainpara"><strong>'; 
+    $footerHTML .= __('Thank you for trusting DATTEQ Ltd.!', 'bcdl-invoice');
+    $footerHTML .= '</strong></p><p class="invfooterpara">';
+    $footerHTML .= __('This invoice was created by <strong>BCDL Invoice</strong> by <strong>DATTEQ</strong>. For more information visit ', 'bcdl-invoice');
+    $footerHTML .= '<a href="https://datteq.com/" target="_blank">https://datteq.com/</a></p></div>';
+    return $footerHTML;
+}
+
+function bcdl_get_company($id) {
+    global $wpdb;
+    $table = $wpdb->prefix . 'bcdl_invoice_companies';
+    $row = $wpdb->get_row($wpdb->prepare("SELECT * FROM $table WHERE company_id = %d", $id), ARRAY_A);
+    return $row ?: [
+        'company_id' => 0,
+        'company_name' => '',
+        'address' => '',
+        'crn' => '',
+        'vat' => '',
+        'mrp' => '',
+        'email' => '',
+        'phone' => '',
+        'iban' => ''
+    ];
+}
+

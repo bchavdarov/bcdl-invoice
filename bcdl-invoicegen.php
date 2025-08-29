@@ -12,10 +12,15 @@ if ( $_SERVER['REQUEST_METHOD']=='GET' && realpath(__FILE__) == realpath( $_SERV
 // Load WordPress so __() works
 require_once dirname(__FILE__, 4) . '/wp-load.php';
 
-// Initialize the variables
+
 require_once __DIR__ . '/bcdl-invclasses.php';
 require_once __DIR__ . '/bcdl-invfunctions.php';
 
+use BCDL\Invoice\Party;
+use BCDL\Invoice\Service;
+use BCDL\Invoice\Invoice;
+
+// Initialize the variables
 $customer = new Party(
     (int) $_POST['custid'],
     stripslashes(sanitize_text_field($_POST['customer'])),
@@ -24,10 +29,49 @@ $customer = new Party(
     stripslashes(sanitize_text_field($_POST['vat'])),
     stripslashes(sanitize_text_field($_POST['mrp'])),
     sanitize_email($_POST['email']),
-    stripslashes(sanitize_text_field($_POST['phone']))
+    stripslashes(sanitize_text_field($_POST['phone'])),
+    stripslashes(sanitize_text_field($_POST['iban']))
 );
 
+// Save the new company to the database if not saved already
 $customer = bcdl_company_save($customer);
+
+// Load supplier (company issuing the invoice) from DB - record ID 1
+$supplier_data = bcdl_get_company(1);
+
+$supplier = new Party(
+    (int) $supplier_data['company_id'],
+    $supplier_data['company_name'],
+    $supplier_data['address'],
+    $supplier_data['crn'],
+    $supplier_data['vat'],
+    $supplier_data['mrp'],
+    $supplier_data['email'],
+    $supplier_data['phone'],
+    $supplier_data['iban']
+);
+
+//Load the services from the form
+$services = [];
+if (!empty($_POST['description']) && is_array($_POST['description'])) {
+    $count = count($_POST['description']);
+    for ($i = 0; $i < $count; $i++) {
+        $services[] = new Service(
+            $_POST['description'][$i] ?? '',
+            $_POST['measure'][$i] ?? '',
+            (float)($_POST['quantity'][$i] ?? 0),
+            (float)($_POST['unit_price'][$i] ?? 0)
+        );
+    }
+}
+
+$invoice = new Invoice($supplier, $customer, 'INV-' . date('YmdHis'));
+
+foreach ($services as $service) {
+    $invoice->addService($service);
+}
+
+
 
 // Creating the code
 $invoicetitle = '<h1>';
@@ -36,18 +80,12 @@ $invoicetitle .= '</h1><p class="invoriginal">';
 
 $invoicesubtitle = __('Original', 'bcdl-invoice');
 
-$invoicebody = '<p><strong>Customer Details</strong></p>
-    <table class="mainpara" border="0">
-        <tr><th>ID</th><td>' . $customer->custid . '</td></tr>
-        <tr><th>Name</th><td>' . $customer->name . '</td></tr>
-        <tr><th>Address</th><td>' . nl2br($customer->address) . '</td></tr>
-        <tr><th>CRN</th><td>' . $customer->crn . '</td></tr>
-        <tr><th>VAT</th><td>' . $customer->vat . '</td></tr>
-        <tr><th>MRP</th><td>' . $customer->mrp . '</td></tr>
-        <tr><th>Email</th><td>' . $customer->email . '</td></tr>
-        <tr><th>Phone</th><td>' . $customer->phone . '</td></tr>
-    </table>';
+// Get the HTML code from the template
+ob_start();
+include __DIR__ . '/bcdl-invoice-template.php';
+$invoicebody = ob_get_clean();
 
+// PDF Generation process
 require_once __DIR__ . '/vendor/autoload.php';
 
 
@@ -75,12 +113,7 @@ $invoicecode = $invoicetitle . $invoicesubtitle . $invoicebody;
 $mpdf->WriteHTML($invoicecode, \Mpdf\HTMLParserMode::HTML_BODY);
 
 // Set Footer
-$footerHTML = '<div class="invfooter"><p class="mainpara"><strong>'; 
-$footerHTML .= __('Thank you for trusting DATTEQ Ltd.!', 'bcdl-invoice');
-$footerHTML .= '</stong></p><p class="invfooterpara">';
-$footerHTML .= __('This invoice was created by <strong>BCDL Invoice</strong> by <strong>DATTEQ</strong>. For more information visit ', 'bcdl-invoice');
-$footerHTML .= '<a href="https://datteq.com/" target="_blank">https://datteq.com/</a></p></div>';
-$mpdf->SetHTMLFooter($footerHTML);
+$mpdf->SetHTMLFooter( bcdl_footer_html() );
 
 // Add a new page
 $mpdf->AddPage();

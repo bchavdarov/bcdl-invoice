@@ -3,7 +3,7 @@
  * Plugin Name:       BCDL Invoice
  * Plugin URI:        https://github.com/bchavdarov/bcdl-invoice
  * Description:       A small WordPress plugin that will create your invoices as 'pdf' files. Shortcode [bcdlinvoice].
- * Version:           3.2.2
+ * Version:           3.2.5
  * Requires at least: 5.3
  * Requires PHP:      7.3
  * Author:            Boncho Chavdarov / DATTEQ Ltd.
@@ -93,6 +93,11 @@ function bcdl_invoice() {
 
             <span class="input-group-text" id="bcdlphonespan">' . __('Phone', 'bcdl-invoice'). '</span>
             <input type="text" name="phone" id="bcdlphone" class="form-control" placeholder="' . __('Phone Number', 'bcdl-invoice'). '" aria-describedby="bcdlphonespan">
+        </div>
+        
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="bcdlibanspan">IBAN</span>
+            <input type="text" name="iban" id="bcdliban" class="form-control" placeholder="IBAN" aria-describedby="bcdlibanspan">
         </div>
         
         <!-- Services Table -->
