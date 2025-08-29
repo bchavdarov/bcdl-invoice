@@ -9,26 +9,23 @@
  */
 ?>
 
-<table class="mainpara" border="0">
-    <tr><th>ID</th><td><?php echo($customer->id); ?></td></tr>
-    <tr><th>Name</th><td><?php echo($customer->name); ?></td></tr>
-    <tr><th>Address</th><td><?php echo( nl2br($customer->address) ); ?></td></tr>
-    <tr><th>CRN</th><td><?php echo($customer->crn); ?></td></tr>
-    <tr><th>VAT</th><td><?php echo($customer->vat); ?></td></tr>
-    <tr><th>MRP</th><td><?php echo($customer->mrp); ?></td></tr>
-    <tr><th>Email</th><td><?php echo($customer->email); ?></td></tr>
-    <tr><th>Phone</th><td><?php echo($customer->phone); ?></td></tr>
-    <tr><th>Phone</th><td><?php echo($customer->iban); ?></td></tr>
+<table class="mainpara" border="0">>
+    <tr style="width: 100%">
+        <td style="width: 50%; padding-right: 3rem;">
+            <span style="text-transform: uppercase;"><strong><?php _e('Customer:', 'bcdl-invoice') ?></strong></span><br />
+            <span><?php echo($customer->name); ?></span><br />
+            <span><?php echo(__('CRN', 'bcdl-invoice') . ': ' . $customer->crn); ?></span><br />
+            <span><?php echo(__('VAT ID', 'bcdl-invoice') . ': ' . $customer->vat); ?></span><br />
+            <span><?php echo(__('Address', 'bcdl-invoice') . ': ' . nl2br($customer->address) ); ?></span>
+        </td>
+        
+        <td style="width: 50%; padding-left: 3rem;">
+            <span style="text-transform: uppercase;"><strong><?php _e('Supplier:', 'bcdl-invoice') ?></strong></span><br />
+            <span><?php echo($supplier->name); ?></span><br />
+            <span><?php echo(__('CRN', 'bcdl-invoice') . ': ' . $supplier->crn); ?></span><br />
+            <span><?php echo(__('VAT ID', 'bcdl-invoice') . ': ' . $supplier->vat); ?></span><br />
+            <span><?php echo(__('Address', 'bcdl-invoice') . ': ' . nl2br($supplier->address) ); ?></span>
+        </td>
+    </tr>
 </table>
 
-<table class="mainpara" border="0">
-    <tr><th>ID</th><td><?php echo($supplier->id); ?></td></tr>
-    <tr><th>Name</th><td><?php echo($supplier->name); ?></td></tr>
-    <tr><th>Address</th><td><?php echo( nl2br($supplier->address) ); ?></td></tr>
-    <tr><th>CRN</th><td><?php echo($supplier->crn); ?></td></tr>
-    <tr><th>VAT</th><td><?php echo($supplier->vat); ?></td></tr>
-    <tr><th>MRP</th><td><?php echo($supplier->mrp); ?></td></tr>
-    <tr><th>Email</th><td><?php echo($supplier->email); ?></td></tr>
-    <tr><th>Phone</th><td><?php echo($supplier->phone); ?></td></tr>
-    <tr><th>Phone</th><td><?php echo($supplier->iban); ?></td></tr>
-</table>
