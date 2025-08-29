@@ -46,6 +46,7 @@ function bcdl_invoice() {
                       . ' data-mrp="' . esc_attr($c->mrp) . '"'
                       . ' data-email="' . esc_attr($c->email) . '"'
                       . ' data-phone="' . esc_attr($c->phone) . '"'
+                      . ' data-iban="' . esc_attr($c->iban) . '"'
                       . '>'
                       . esc_html($c->company_name)
                       . '</option>';
@@ -213,6 +214,7 @@ function bcdl_invoice() {
             document.getElementById("bcdlmrp").value = selected.dataset.mrp || "";
             document.getElementById("bcdlemail").value = selected.dataset.email || "";
             document.getElementById("bcdlphone").value = selected.dataset.phone || "";
+            document.getElementById("bcdliban").value = selected.dataset.iban || "";
         });
     });
     </script>';
