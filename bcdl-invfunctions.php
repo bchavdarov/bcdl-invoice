@@ -1,5 +1,10 @@
 <?php
 
+use BCDL\Invoice\Party;
+use BCDL\Invoice\Invoice;
+use DateTime;
+
+
 if (!defined('ABSPATH')) {
     exit;
 }
@@ -176,3 +181,124 @@ function bcdl_get_company($id) {
     ];
 }
 
+function bcdl_save_invoice_to_database(
+    Party $customer,
+    Party $supplier,
+    array $services,
+    ?DateTime $eventDate = null,
+    ?DateTime $dueDate = null
+): ?Invoice {
+    global $wpdb;
+
+    // 1. Insert invoice (without number yet)
+    $wpdb->insert(
+        "{$wpdb->prefix}bcdl_invoices",
+        [
+            'supplier_id' => $supplier->id,
+            'customer_id' => $customer->id,
+            'issue_date'  => current_time('mysql'),
+            'event_date'  => $eventDate?->format('Y-m-d'),
+            'due_date'    => $dueDate?->format('Y-m-d'),
+        ],
+        ['%d', '%d', '%s', '%s', '%s']
+    );
+
+    $invoice_id = $wpdb->insert_id;
+    if (!$invoice_id) {
+        return null;
+    }
+
+    // 2. Generate invoice number (10 digits, zero-padded)
+    $invoice_number = str_pad((string)$invoice_id, 10, '0', STR_PAD_LEFT);
+    $wpdb->update(
+        "{$wpdb->prefix}bcdl_invoices",
+        ['invoice_number' => $invoice_number],
+        ['invoice_id' => $invoice_id],
+        ['%s'],
+        ['%d']
+    );
+
+    // 3. Save services
+    foreach ($services as $service) {
+        $wpdb->insert(
+            "{$wpdb->prefix}bcdl_invoice_services",
+            [
+                'invoice_id'  => $invoice_id,
+                'description' => $service->description,
+                'measure'     => $service->measure,
+                'quantity'    => $service->quantity,
+                'unit_price'  => $service->unitPrice,
+                'tax_rate'    => $service->taxRate,
+                'discount'    => $service->discount,
+            ],
+            ['%d', '%s', '%s', '%f', '%f', '%f', '%f']
+        );
+    }
+
+    // 4. Build Invoice object to return
+    $invoice = new Invoice(
+        $supplier,
+        $customer,
+        $invoice_number,
+        $eventDate
+    );
+    $invoice->id      = $invoice_id;
+    $invoice->dueDate = $dueDate;
+
+    foreach ($services as $service) {
+        $invoice->addService($service);
+    }
+
+    return $invoice;
+}
+
+function bcdl_create_invoices_table() {
+    global $wpdb;
+
+    $table_name = $wpdb->prefix . 'bcdl_invoices';
+    $charset_collate = $wpdb->get_charset_collate();
+
+    $sql = "CREATE TABLE IF NOT EXISTS $table_name (
+        invoice_id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+        supplier_id INT(11) NOT NULL,
+        customer_id INT(11) NOT NULL,
+        invoice_number VARCHAR(20) NOT NULL,
+        issue_date DATE NOT NULL,
+        event_date DATE NOT NULL,
+        due_date DATE DEFAULT NULL,
+        tax_base DECIMAL(15,2) NOT NULL DEFAULT 0.00,
+        tax_amount DECIMAL(15,2) NOT NULL DEFAULT 0.00,
+        grand_total DECIMAL(15,2) NOT NULL DEFAULT 0.00,
+        PRIMARY KEY (invoice_id),
+        UNIQUE KEY invoice_number_unique (invoice_number)
+    ) $charset_collate;";
+
+    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+    dbDelta($sql);
+}
+
+/**
+ * Create the invoice services table if it doesn't exist
+ */
+function bcdl_create_invoice_services_table() {
+    global $wpdb;
+
+    $table_name = $wpdb->prefix . 'bcdl_invoice_services';
+    $charset_collate = $wpdb->get_charset_collate();
+
+    $sql = "CREATE TABLE IF NOT EXISTS $table_name (
+        service_id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+        invoice_id BIGINT(20) UNSIGNED NOT NULL,
+        description TEXT NOT NULL,
+        measure VARCHAR(50) DEFAULT '',
+        quantity DECIMAL(15,2) NOT NULL DEFAULT 0.00,
+        unit_price DECIMAL(15,2) NOT NULL DEFAULT 0.00,
+        tax_rate DECIMAL(5,2) NOT NULL DEFAULT 0.00,
+        discount DECIMAL(15,2) NOT NULL DEFAULT 0.00,
+        PRIMARY KEY (service_id),
+        KEY invoice_id_idx (invoice_id)
+    ) $charset_collate;";
+
+    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+    dbDelta($sql);
+}

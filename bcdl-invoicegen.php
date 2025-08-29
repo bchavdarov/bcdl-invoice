@@ -57,30 +57,41 @@ if (!empty($_POST['description']) && is_array($_POST['description'])) {
     $count = count($_POST['description']);
     for ($i = 0; $i < $count; $i++) {
         $services[] = new Service(
-            $_POST['description'][$i] ?? '',
-            $_POST['measure'][$i] ?? '',
-            (float)($_POST['quantity'][$i] ?? 0),
-            (float)($_POST['unit_price'][$i] ?? 0)
+            $_POST['description'][$i],
+            $_POST['measure'][$i],
+            (float) $_POST['quantity'][$i],
+            (float) $_POST['unit_price'][$i],
+            (float) ($_POST['tax_rate'][$i] ?? 0),
+            (float) ($_POST['discount'][$i] ?? 0)
         );
     }
 }
 
-$invoice = new Invoice($supplier, $customer, 'INV-' . date('YmdHis'));
+bcdl_create_invoices_table();
+bcdl_create_invoice_services_table();
 
-foreach ($services as $service) {
-    $invoice->addService($service);
-}
+// Prepare dates
+//$eventDate = !empty($_POST['event_date']) ? new DateTime($_POST['event_date']) : null;
+//$dueDate   = !empty($_POST['due_date'])   ? new DateTime($_POST['due_date'])   : null;
+$eventDate = !empty($_POST['event_date']) 
+    ? new DateTime($_POST['event_date']) 
+    : new DateTime('today'); // fallback to today
 
+$dueDate = !empty($_POST['due_date']) 
+    ? new DateTime($_POST['due_date']) 
+    : (clone $eventDate)->modify('+30 days');
 
+// Save invoice
+$invoice = bcdl_save_invoice_to_database($customer, $supplier, $services, $eventDate, $dueDate);
 
 // Creating the code
-$invoicetitle = '<h1>';
+$invoicetitle = '<h1 style="border-bottom: 1px solid black;">';
 $invoicetitle .= __('Invoice', 'bcdl-invoice');
 $invoicetitle .= '</h1><p class="invoriginal">';
 
 $invoicesubtitle = __('Original', 'bcdl-invoice');
 
-// Get the HTML code from the template
+// Get the HTML code from the template ====================
 ob_start();
 include __DIR__ . '/bcdl-invoice-template.php';
 $invoicebody = ob_get_clean();
