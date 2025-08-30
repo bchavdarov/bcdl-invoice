@@ -2,8 +2,6 @@
 
 use BCDL\Invoice\Party;
 use BCDL\Invoice\Invoice;
-use DateTime;
-
 
 if (!defined('ABSPATH')) {
     exit;
@@ -185,8 +183,10 @@ function bcdl_save_invoice_to_database(
     Party $customer,
     Party $supplier,
     array $services,
+    ?DateTime $issueDate = null,
     ?DateTime $eventDate = null,
-    ?DateTime $dueDate = null
+    ?DateTime $dueDate = null,
+    string $meta,
 ): ?Invoice {
     global $wpdb;
 
@@ -196,11 +196,12 @@ function bcdl_save_invoice_to_database(
         [
             'supplier_id' => $supplier->id,
             'customer_id' => $customer->id,
-            'issue_date'  => current_time('mysql'),
+            'issue_date'  => $issueDate?->format('Y-m-d'),
             'event_date'  => $eventDate?->format('Y-m-d'),
             'due_date'    => $dueDate?->format('Y-m-d'),
+            'meta'        => $meta
         ],
-        ['%d', '%d', '%s', '%s', '%s']
+        ['%d', '%d', '%s', '%s', '%s', '%s']
     );
 
     $invoice_id = $wpdb->insert_id;
@@ -269,6 +270,7 @@ function bcdl_create_invoices_table() {
         tax_base DECIMAL(15,2) NOT NULL DEFAULT 0.00,
         tax_amount DECIMAL(15,2) NOT NULL DEFAULT 0.00,
         grand_total DECIMAL(15,2) NOT NULL DEFAULT 0.00,
+        meta LONGTEXT DEFAULT NULL, -- JSON string with extra data
         PRIMARY KEY (invoice_id),
         UNIQUE KEY invoice_number_unique (invoice_number)
     ) $charset_collate;";

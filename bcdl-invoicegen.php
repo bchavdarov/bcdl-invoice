@@ -70,19 +70,29 @@ if (!empty($_POST['description']) && is_array($_POST['description'])) {
 bcdl_create_invoices_table();
 bcdl_create_invoice_services_table();
 
+// Collect meta 
+$meta = json_encode([
+    'taxrate'     => $_POST['taxrate'] ?? '',
+    'currency' => $_POST['currency'] ?? 'EUR',
+    'vatbase'  => $_POST['vatbase'] ?? '',
+    'paymentmethod'  => $_POST['paymentmethod'] ?? '',
+], JSON_UNESCAPED_UNICODE);
+
 // Prepare dates
-//$eventDate = !empty($_POST['event_date']) ? new DateTime($_POST['event_date']) : null;
-//$dueDate   = !empty($_POST['due_date'])   ? new DateTime($_POST['due_date'])   : null;
-$eventDate = !empty($_POST['event_date']) 
-    ? new DateTime($_POST['event_date']) 
+$issueDate = !empty($_POST['issuedate']) 
+    ? new DateTime($_POST['issuedate']) 
     : new DateTime('today'); // fallback to today
 
-$dueDate = !empty($_POST['due_date']) 
-    ? new DateTime($_POST['due_date']) 
+$eventDate = !empty($_POST['eventdate']) 
+    ? new DateTime($_POST['eventdate']) 
+    : new DateTime('today'); // fallback to today
+
+$dueDate = !empty($_POST['duedate']) 
+    ? new DateTime($_POST['duedate']) 
     : (clone $eventDate)->modify('+30 days');
 
 // Save invoice
-$invoice = bcdl_save_invoice_to_database($customer, $supplier, $services, $eventDate, $dueDate);
+$invoice = bcdl_save_invoice_to_database($customer, $supplier, $services, $issueDate, $eventDate, $dueDate, $meta);
 
 // Creating the code
 $invoicetitle = '<h1 style="border-bottom: 1px solid black;">';

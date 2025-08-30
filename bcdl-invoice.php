@@ -61,7 +61,7 @@ function bcdl_invoice() {
 
       <form action="';
     $resulthtml .= plugin_dir_url(__FILE__) . 'bcdl-invoicegen.php';
-    $resulthtml .= '" method="post" target="_blank">
+    $resulthtml .= '" method="post" target="_blank" class="mb-3">
         <!-- Customer -->
         <div class="input-group mb-3">
           <span class="input-group-text" id="bcdlcustidspan">';
@@ -100,7 +100,50 @@ function bcdl_invoice() {
             <span class="input-group-text" id="bcdlibanspan">IBAN</span>
             <input type="text" name="iban" id="bcdliban" class="form-control" placeholder="IBAN" aria-describedby="bcdlibanspan">
         </div>
-        
+
+        <!-- The invoice document data =========================== -->
+        <div class="border p-2 mb-3">
+          <div class="input-group mb-3">
+            <span class="input-group-text" id="bcdlissuedatspan">' . __('Issue date', 'bcdl-invoice'). '</span>
+            <input type="text" name="issuedate" id="bcdlissuedate" class="form-control" placeholder="' . __('Issue date', 'bcdl-invoice'). '" aria-label="' . __('Issue date', 'bcdl-invoice'). '" aria-describedby="bcdlissuedatspan">
+
+            <span class="input-group-text" id="bcdleventdatspan">' . __('Event date', 'bcdl-invoice'). '</span>
+            <input type="text" name="eventdate" id="bcdleventdate" class="form-control" placeholder="' . __('Event date', 'bcdl-invoice'). '" aria-label="' . __('Event date', 'bcdl-invoice'). '" aria-describedby="bcdleventdatspan">
+            
+            <span class="input-group-text" id="bcdlduedatspan">' . __('Due date', 'bcdl-invoice'). '</span>
+            <input type="text" name="duedate" id="bcdlduedate" class="form-control" placeholder="' . __('Due date', 'bcdl-invoice'). '" aria-label="' . __('Due date', 'bcdl-invoice'). '" aria-describedby="bcdlduedatspan">
+          </div>
+          
+          <div class="input-group mb-3 flex-nowrap">
+            <span class="input-group-text" id="bcdltaxrtspan">' . __('Tax rate', 'bcdl-invoice'). '</span>
+            <div class="col-md-3 flex-grow-0">
+              <select class="form-select" name="taxrate" aria-label="Tax rate">
+                <option selected disabled>' . __('Select tax rate in %', 'bcdl-invoice'). '</option>
+                <option value="20">20</option>
+                <option value="9">9</option>
+                <option value="0">0</option>
+              </select>
+            </div>
+            <span class="input-group-text" id="bcdlvatbasespan">' . __('VAT Base', 'bcdl-invoice'). '</span>
+            <input type="text" name="vatbase" id="bcdlvatbase" class="form-control" placeholder="' . __('VAT Base', 'bcdl-invoice'). '" aria-label="VAT base" aria-describedby="bcdlvatbasespan">
+          </div>
+
+          <div class="input-group mb-3 flex-nowrap">
+            <span class="input-group-text" id="bcdlpaymet">' . __('Select payment method', 'bcdl-invoice'). '</span>
+            <select class="form-select" name="paymentmethod" aria-label="' . __('Select payment method', 'bcdl-invoice'). '">
+              <option value="bank" selected>' . __('Bank Transfer', 'bcdl-invoice'). '</option>
+              <option value="cash">' . __('Cash', 'bcdl-invoice'). '</option>
+              <option value="offset">' . __('Set off / Offset', 'bcdl-invoice'). '</option>
+            </select>
+
+            <span class="input-group-text" id="bcdlcurrency">' . __('Select currency', 'bcdl-invoice'). '</span>
+            <select class="form-select" name="currency" aria-label="' . __('Select currency', 'bcdl-invoice'). '">
+              <option value="bank" selected>EUR</option>
+              <option value="cash">BGN</option>
+            </select>
+          </div>
+        </div>
+
         <!-- Services Table -->
         <table class="table table-bordered" id="servicesTable">
           <thead class="table-light">
