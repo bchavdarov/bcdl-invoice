@@ -11,8 +11,6 @@ if ( $_SERVER['REQUEST_METHOD']=='GET' && realpath(__FILE__) == realpath( $_SERV
 
 // Load WordPress so __() works
 require_once dirname(__FILE__, 4) . '/wp-load.php';
-
-
 require_once __DIR__ . '/bcdl-invclasses.php';
 require_once __DIR__ . '/bcdl-invfunctions.php';
 
@@ -32,9 +30,6 @@ $customer = new Party(
     stripslashes(sanitize_text_field($_POST['phone'])),
     stripslashes(sanitize_text_field($_POST['iban']))
 );
-
-// Save the new company to the database if not saved already
-$customer = bcdl_company_save($customer);
 
 // Load supplier (company issuing the invoice) from DB - record ID 1
 $supplier_data = bcdl_get_company(1);
@@ -67,16 +62,17 @@ if (!empty($_POST['description']) && is_array($_POST['description'])) {
     }
 }
 
-bcdl_create_invoices_table();
-bcdl_create_invoice_services_table();
-
 // Collect meta 
-$meta = json_encode([
+$meta_form = [
     'taxrate'     => $_POST['taxrate'] ?? '',
     'currency' => $_POST['currency'] ?? 'EUR',
     'vatbase'  => $_POST['vatbase'] ?? '',
     'paymentmethod'  => $_POST['paymentmethod'] ?? '',
-], JSON_UNESCAPED_UNICODE);
+    'issuer'     => $_POST['issuer'] ?? '',
+    'receiver'     => $_POST['receiver'] ?? '',
+];
+
+$meta = json_encode($meta_form, JSON_UNESCAPED_UNICODE);
 
 // Prepare dates
 $issueDate = !empty($_POST['issuedate']) 
@@ -91,6 +87,16 @@ $dueDate = !empty($_POST['duedate'])
     ? new DateTime($_POST['duedate']) 
     : (clone $eventDate)->modify('+30 days');
 
+$currency = $_POST['currency'];
+
+// Function calls:
+// Save the new company to the database if not saved already
+$customer = bcdl_company_save($customer);
+
+// Create the two tables - invoices and services if they don't exist
+bcdl_create_invoices_table();
+bcdl_create_invoice_services_table();
+
 // Save invoice
 $invoice = bcdl_save_invoice_to_database($customer, $supplier, $services, $issueDate, $eventDate, $dueDate, $meta);
 
@@ -98,7 +104,6 @@ $invoice = bcdl_save_invoice_to_database($customer, $supplier, $services, $issue
 $invoicetitle = '<h1 style="border-bottom: 1px solid black;">';
 $invoicetitle .= __('Invoice', 'bcdl-invoice');
 $invoicetitle .= '</h1><p class="invoriginal">';
-
 $invoicesubtitle = __('Original', 'bcdl-invoice');
 
 // Get the HTML code from the template ====================
@@ -128,6 +133,9 @@ if (file_exists(__DIR__ . '/bcdl-invoice.css')) {
     $stylesheet = file_get_contents(__DIR__ . '/bcdl-invoice.css');
     $mpdf->WriteHTML($stylesheet, \Mpdf\HTMLParserMode::HEADER_CSS);
 }
+
+// Set Header
+$mpdf->SetHTMLHeader( bcdl_header_html() );
 
 // Write HTML content ORIGINAL
 $invoicecode = $invoicetitle . $invoicesubtitle . $invoicebody;

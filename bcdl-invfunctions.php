@@ -153,6 +153,11 @@ function bcdl_company_save($customer) {
     return $customer;
 }
 
+function bcdl_header_html() {
+    $headerHTML = '<img src="' . plugin_dir_url(__FILE__) . 'logo.png" style="float: right; height: 30px;">';
+    return $headerHTML;
+}
+
 function bcdl_footer_html() {
     $footerHTML = '<div class="invfooter"><p class="mainpara"><strong>'; 
     $footerHTML .= __('Thank you for trusting DATTEQ Ltd.!', 'bcdl-invoice');
@@ -183,10 +188,10 @@ function bcdl_save_invoice_to_database(
     Party $customer,
     Party $supplier,
     array $services,
-    ?DateTime $issueDate = null,
-    ?DateTime $eventDate = null,
+    DateTime $issueDate,
+    DateTime $eventDate,
     ?DateTime $dueDate = null,
-    string $meta,
+    string $meta = '{}',
 ): ?Invoice {
     global $wpdb;
 
@@ -303,4 +308,8 @@ function bcdl_create_invoice_services_table() {
 
     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
     dbDelta($sql);
+}
+
+function bcdl_format_date(?DateTime $date): string {
+    return $date ? $date->format('d.m.Y') : '';
 }

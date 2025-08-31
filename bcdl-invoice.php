@@ -3,7 +3,7 @@
  * Plugin Name:       BCDL Invoice
  * Plugin URI:        https://github.com/bchavdarov/bcdl-invoice
  * Description:       A small WordPress plugin that will create your invoices as 'pdf' files. Shortcode [bcdlinvoice].
- * Version:           3.2.5
+ * Version:           3.3.0
  * Requires at least: 5.3
  * Requires PHP:      7.3
  * Author:            Boncho Chavdarov / DATTEQ Ltd.
@@ -131,17 +131,26 @@ function bcdl_invoice() {
           <div class="input-group mb-3 flex-nowrap">
             <span class="input-group-text" id="bcdlpaymet">' . __('Select payment method', 'bcdl-invoice'). '</span>
             <select class="form-select" name="paymentmethod" aria-label="' . __('Select payment method', 'bcdl-invoice'). '">
-              <option value="bank" selected>' . __('Bank Transfer', 'bcdl-invoice'). '</option>
-              <option value="cash">' . __('Cash', 'bcdl-invoice'). '</option>
-              <option value="offset">' . __('Set off / Offset', 'bcdl-invoice'). '</option>
+              <option value="Bank Transfer" selected>' . __('Bank Transfer', 'bcdl-invoice'). '</option>
+              <option value="Cash">' . __('Cash', 'bcdl-invoice'). '</option>
+              <option value="Set off / Offset">' . __('Set off / Offset', 'bcdl-invoice'). '</option>
             </select>
 
             <span class="input-group-text" id="bcdlcurrency">' . __('Select currency', 'bcdl-invoice'). '</span>
             <select class="form-select" name="currency" aria-label="' . __('Select currency', 'bcdl-invoice'). '">
-              <option value="bank" selected>EUR</option>
-              <option value="cash">BGN</option>
+              <option value="eur" selected>EUR</option>
+              <option value="bgn">BGN</option>
             </select>
           </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text" id="bcdlissuerspan">' . __('Issuer', 'bcdl-invoice'). '</span>
+            <input type="issuer" name="issuer" id="bcdlissuer" class="form-control" placeholder="' . __('Issuer names', 'bcdl-invoice'). '" aria-describedby="bcdlissuerspan">
+
+            <span class="input-group-text" id="bcdlreceiverspan">' . __('Receiver', 'bcdl-invoice'). '</span>
+            <input type="text" name="receiver" id="bcdlreceiver" class="form-control" placeholder="' . __('Receiver names', 'bcdl-invoice'). '" aria-describedby="bcdlreceiverspan">
+          </div>
+          
         </div>
 
         <!-- Services Table -->
