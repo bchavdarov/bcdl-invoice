@@ -1,0 +1,318 @@
+# Copyright (C) 2025 Boncho Chavdarov / DATTEQ Ltd.
+# This file is distributed under the GPL v3 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: BCDL Invoice 3.0.1\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/bcdl-invoice\n"
+"POT-Creation-Date: 2025-08-31T19:32:19+00:00\n"
+"PO-Revision-Date: 2025-08-31 22:33+0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: bg_BG\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.2.2\n"
+"X-Domain: bcdl-invoice\n"
+
+#. Plugin Name of the plugin
+#: bcdl-invoicegen.php:128
+msgid "BCDL Invoice"
+msgstr "BCDL Invoice"
+
+#. Plugin URI of the plugin
+msgid "https://github.com/bchavdarov/bcdl-invoice"
+msgstr "https://github.com/bchavdarov/bcdl-invoice"
+
+#. Description of the plugin
+msgid ""
+"A small WordPress plugin that will create your invoices as 'pdf' files. "
+"Shortcode [bcdlinvoice]."
+msgstr ""
+"Малък плъгин за WordPress, който ще създава вашите фактури като „pdf“ "
+"файлове. Кратък код [bcdlinvoice]."
+
+#. Author of the plugin
+msgid "Boncho Chavdarov / DATTEQ Ltd."
+msgstr "Бончо Чавдаров / ДАТТЕК ЕООД"
+
+#. Author URI of the plugin
+msgid "https://datteq.com/"
+msgstr "https://datteq.com/"
+
+#: bcdl-invfunctions.php:15 bcdl-invfunctions.php:16
+msgid "BCDL Invoice Settings"
+msgstr "Настройки на BCDL Invoice"
+
+#: bcdl-invfunctions.php:70
+msgid "Database error: "
+msgstr "Грешка в базата данни: "
+
+#: bcdl-invfunctions.php:71
+msgid "Company info saved successfully!"
+msgstr "Данните за компанията са съхранени успешно!"
+
+#: bcdl-invfunctions.php:80
+msgid "Company Settings"
+msgstr "Настройка на данните за компанията"
+
+#: bcdl-invfunctions.php:83
+msgid "Company Name"
+msgstr "Име на компанията"
+
+#: bcdl-invfunctions.php:85 bcdl-invoice-template.php:31
+#: bcdl-invoice-template.php:39
+msgid "Address"
+msgstr "Адрес"
+
+#: bcdl-invfunctions.php:87 bcdl-invoice-template.php:29
+#: bcdl-invoice-template.php:37 bcdl-invoice.php:79
+msgid "CRN"
+msgstr "ЕИК"
+
+#: bcdl-invfunctions.php:89 bcdl-invoice.php:85
+msgid "VAT Number"
+msgstr "Данъчен номер"
+
+#: bcdl-invfunctions.php:91 bcdl-invoice.php:87
+msgid "MRP"
+msgstr "МОЛ"
+
+#: bcdl-invfunctions.php:93 bcdl-invoice.php:92 bcdl-invoice.php:93
+msgid "Email"
+msgstr "Имейл"
+
+#: bcdl-invfunctions.php:95 bcdl-invoice.php:95
+msgid "Phone"
+msgstr "Телефон"
+
+#: bcdl-invfunctions.php:100
+msgid "Save Company Data"
+msgstr "Запази данните за фирмата"
+
+#: bcdl-invfunctions.php:163
+msgid "Thank you for trusting DATTEQ Ltd.!"
+msgstr "Благодарим Ви, че се доверихте на ДАТТЕК ЕООД!"
+
+#: bcdl-invfunctions.php:165
+msgid ""
+"This invoice was created by <strong>BCDL Invoice</strong> by <strong>DATTEQ</"
+"strong>. For more information visit "
+msgstr ""
+"Тази фактура е създадена със софтуер <strong>BCDL Invoice</strong> от "
+"<strong>ДАТТЕК ЕООД</strong>. За повече информация посетете "
+
+#: bcdl-invoice-template.php:13
+msgid "Number"
+msgstr "Номер"
+
+#: bcdl-invoice-template.php:16 bcdl-invoice.php:107 bcdl-invoice.php:108
+msgid "Issue date"
+msgstr "Дата на издаване"
+
+#: bcdl-invoice-template.php:19 bcdl-invoice.php:110 bcdl-invoice.php:111
+msgid "Event date"
+msgstr "Данъчно събитие"
+
+#: bcdl-invoice-template.php:27
+msgid "Customer:"
+msgstr "Получател:"
+
+#: bcdl-invoice-template.php:30 bcdl-invoice-template.php:38
+msgid "VAT ID"
+msgstr "ИН по ЗДДС"
+
+#: bcdl-invoice-template.php:35
+msgid "Supplier:"
+msgstr "Доставчик:"
+
+#: bcdl-invoice-template.php:51
+msgid "Description of good or service"
+msgstr "Описание на стоката или услугата"
+
+#: bcdl-invoice-template.php:52 bcdl-invoice.php:162
+msgid "Measure"
+msgstr "Мярка"
+
+#: bcdl-invoice-template.php:53 bcdl-invoice.php:163 bcdl-invoice.php:174
+msgid "Quantity"
+msgstr "Количество"
+
+#: bcdl-invoice-template.php:54 bcdl-invoice.php:164 bcdl-invoice.php:175
+msgid "Unit Price"
+msgstr "Единична цена"
+
+#: bcdl-invoice-template.php:56
+msgid "Discount"
+msgstr "Отстъпка"
+
+#: bcdl-invoice-template.php:57
+msgid "Tax Rate"
+msgstr "ДДС"
+
+#: bcdl-invoice-template.php:59 bcdl-invoice.php:165
+msgid "Total"
+msgstr "Общо"
+
+#: bcdl-invoice-template.php:89
+msgid "Grand Total:"
+msgstr "Сума:"
+
+#: bcdl-invoice-template.php:90
+msgid "Tax base:"
+msgstr "Данъчна основа:"
+
+#: bcdl-invoice-template.php:91
+msgid "Tax:"
+msgstr "ДДС:"
+
+#: bcdl-invoice-template.php:92
+msgid "Payable sum:"
+msgstr "Сума за плащане:"
+
+#: bcdl-invoice-template.php:106
+msgid "Base for not applying VAT: "
+msgstr "Основание за неначисляване на ДДС: "
+
+#: bcdl-invoice-template.php:110
+msgid "Payment method: "
+msgstr "Начин на плащане: "
+
+#: bcdl-invoice-template.php:117 bcdl-invoice.php:147
+msgid "Issuer"
+msgstr "Съставил"
+
+#: bcdl-invoice-template.php:120 bcdl-invoice.php:150
+msgid "Receiver"
+msgstr "Получил"
+
+#: bcdl-invoice.php:32
+msgid "INVOICE Form"
+msgstr "Създаване на фактура"
+
+#: bcdl-invoice.php:38
+msgid "Select company from the list"
+msgstr "Изберете фирма от списъка"
+
+#: bcdl-invoice.php:55
+msgid "No customers found"
+msgstr "Не са намерени клиенти"
+
+#: bcdl-invoice.php:59
+msgid "Select company"
+msgstr "Изберете фирма"
+
+#: bcdl-invoice.php:68 bcdl-invoice.php:70
+msgid "Customer ID"
+msgstr "Клиент #"
+
+#: bcdl-invoice.php:71 bcdl-invoice.php:72
+msgid "Customer Name"
+msgstr "Име на клиента"
+
+#: bcdl-invoice.php:76 bcdl-invoice.php:77
+msgid "Customer Address"
+msgstr "Адрес на клиента"
+
+#: bcdl-invoice.php:80
+msgid "Company Registration Number"
+msgstr "Единен идентификационен код"
+
+#: bcdl-invoice.php:84
+msgid "VAT"
+msgstr "ДН"
+
+#: bcdl-invoice.php:88
+msgid "Materially Responsible Person"
+msgstr "Материално отговорно лице"
+
+#: bcdl-invoice.php:96
+msgid "Phone Number"
+msgstr "Телефонен номер"
+
+#: bcdl-invoice.php:113 bcdl-invoice.php:114
+msgid "Due date"
+msgstr "Срок за плащане"
+
+#: bcdl-invoice.php:118
+msgid "Tax rate"
+msgstr "ДДС"
+
+#: bcdl-invoice.php:121
+msgid "Select tax rate in %"
+msgstr "Изберете ДДС в %"
+
+#: bcdl-invoice.php:127 bcdl-invoice.php:128
+msgid "VAT Base"
+msgstr "Основание за начисляване на ДДС"
+
+#: bcdl-invoice.php:132 bcdl-invoice.php:133
+msgid "Select payment method"
+msgstr "Избор на плащане"
+
+#: bcdl-invoice.php:134
+msgid "Bank Transfer"
+msgstr "С платежно нареждане"
+
+#: bcdl-invoice.php:135
+msgid "Cash"
+msgstr "В брой"
+
+#: bcdl-invoice.php:136
+msgid "Set off / Offset"
+msgstr "С насрещно прихващане"
+
+#: bcdl-invoice.php:139 bcdl-invoice.php:140
+msgid "Select currency"
+msgstr "Изберете валута"
+
+#: bcdl-invoice.php:148
+msgid "Issuer names"
+msgstr "Издал име и фамилия"
+
+#: bcdl-invoice.php:151
+msgid "Receiver names"
+msgstr "Получил име и фамилия"
+
+#: bcdl-invoice.php:161
+msgid "Description of the product or service"
+msgstr "Описание на стоката или услугата"
+
+#: bcdl-invoice.php:166
+msgid "Action"
+msgstr "Действие"
+
+#: bcdl-invoice.php:177 bcdl-invoice.php:240
+msgid "Remove"
+msgstr "Изтрий"
+
+#: bcdl-invoice.php:182
+msgid "Grand Total"
+msgstr "Сума"
+
+#: bcdl-invoice.php:189
+msgid "Add Service"
+msgstr "Нова стока/услуга"
+
+#: bcdl-invoice.php:193
+msgid "Generate invoice"
+msgstr "Генерирай фактура"
+
+#: bcdl-invoicegen.php:105
+msgid "Invoice"
+msgstr "Фактура"
+
+#: bcdl-invoicegen.php:107
+msgid "Original"
+msgstr "Оригинал"
+
+#, fuzzy
+#~| msgid "Customer ID"
+#~ msgid "Customer Details"
+#~ msgstr "Клиент #"
+
+#, fuzzy
+#~| msgid "Add Service"
+#~ msgid "Services"
+#~ msgstr "Нова стока/услуга"
