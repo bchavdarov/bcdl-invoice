@@ -109,6 +109,7 @@ if ($meta_form['taxrate'] === '0') {
 <p class="mainpara">
     <?php echo __('Payment method: ', 'bcdl-invoice') .  __($meta_form['paymentmethod'], 'bcdl-invoice'); ?><br />
     <?php echo 'IBAN: ' .  $supplier->iban; ?><br />
+    <?php echo __('Payment term: ', 'bcdl-invoice') .  bcdl_format_date($dueDate); ?><br />
 </p>
 
 <p>&nbsp;</p>

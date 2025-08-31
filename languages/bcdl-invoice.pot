@@ -2,14 +2,14 @@
 # This file is distributed under the GPL v3 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: BCDL Invoice 3.2.6\n"
+"Project-Id-Version: BCDL Invoice 3.3.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/bcdl-invoice\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-08-31T19:32:19+00:00\n"
+"POT-Creation-Date: 2025-08-31T20:24:43+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: bcdl-invoice\n"
@@ -189,12 +189,16 @@ msgstr ""
 msgid "Payment method: "
 msgstr ""
 
+#: bcdl-invoice-template.php:112
+msgid "Payment term: "
+msgstr ""
+
 #: bcdl-invoice-template.php:117
 #: bcdl-invoice.php:147
 msgid "Issuer"
 msgstr ""
 
-#: bcdl-invoice-template.php:120
+#: bcdl-invoice-template.php:121
 #: bcdl-invoice.php:150
 msgid "Receiver"
 msgstr ""

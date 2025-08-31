@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BCDL Invoice 3.0.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/bcdl-invoice\n"
-"POT-Creation-Date: 2025-08-31T19:32:19+00:00\n"
-"PO-Revision-Date: 2025-08-31 22:33+0300\n"
+"POT-Creation-Date: 2025-08-31T20:24:43+00:00\n"
+"PO-Revision-Date: 2025-08-31 23:25+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: bg_BG\n"
@@ -179,11 +179,15 @@ msgstr "Основание за неначисляване на ДДС: "
 msgid "Payment method: "
 msgstr "Начин на плащане: "
 
+#: bcdl-invoice-template.php:112
+msgid "Payment term: "
+msgstr "Срок за плащане: "
+
 #: bcdl-invoice-template.php:117 bcdl-invoice.php:147
 msgid "Issuer"
 msgstr "Съставил"
 
-#: bcdl-invoice-template.php:120 bcdl-invoice.php:150
+#: bcdl-invoice-template.php:121 bcdl-invoice.php:150
 msgid "Receiver"
 msgstr "Получил"
 
